@@ -49,7 +49,7 @@ let pingCommand (update: GroupUpdate) =
     sendMessage "Pong" update.MessageNew.Message.PeerId
 
 let echoCommand (update: GroupUpdate) =
-     sendMessage (messageText update).Value update.MessageNew.Message.PeerId
+    sendMessage (messageText update).Value update.MessageNew.Message.PeerId
 
 let commandDispatch (update: GroupUpdate) =
     let text = (messageText update).Value
@@ -69,6 +69,8 @@ let updateDispatch (update) =
     | Some(text) -> commandDispatch update
     | None -> ()
 
+let groupLongPoll (token: CancellationTokenSource) =
+    vkApi.StartGroupLongPollAsync(GroupLongPollConfiguration.Default, token.Token)
 
 let readChannel (channelReader: ChannelReader<_>) =
     channelReader.ReadAllAsync()
@@ -80,12 +82,13 @@ let readChannel (channelReader: ChannelReader<_>) =
 let main args =
     let exitCode = 0
 
-    let cancellationTokenSource = new CancellationTokenSource()
+    let cancellationTokenSource = new CancellationTokenSource ()
 
     vkApi.Authorize authParams |> ignore
 
-    let groupLongPoll = vkApi.StartGroupLongPollAsync(GroupLongPollConfiguration.Default, cancellationTokenSource.Token)
-    let channelReader = groupLongPoll.AsChannelReader()
+    let channelReader =
+        groupLongPoll cancellationTokenSource
+        |> fun x -> x.AsChannelReader()
 
     while true do
         readChannel channelReader |> Async.RunSynchronously |> ignore
