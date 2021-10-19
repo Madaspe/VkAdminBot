@@ -9,6 +9,7 @@ open VkNet.Model.GroupUpdate
 open VkNet
 open FSharp.Control
 open System
+
 let random = new Random()
 let sendMessage (text: string) peerId (vkApi: VkApi) =
     let messageParams = new RequestParams.MessagesSendParams (
@@ -16,9 +17,9 @@ let sendMessage (text: string) peerId (vkApi: VkApi) =
         PeerId=peerId,
         RandomId=(int64 <| random.Next 999999)
     )
-        
+            
     vkApi.Messages.Send(messageParams) |> ignore
-    
+        
 let notNull value = not (obj.ReferenceEquals(value, null))
 
 let messageText (update: GroupUpdate): string option =
@@ -32,9 +33,9 @@ let messageText (update: GroupUpdate): string option =
 
 let getEnvVar x =
     let envVars = 
-      System.Environment.GetEnvironmentVariables()
-      |> Seq.cast<System.Collections.DictionaryEntry>
-      |> Seq.map (fun d -> d.Key :?> string, d.Value :?> string)
-      |> Map.ofSeq
+        System.Environment.GetEnvironmentVariables()
+        |> Seq.cast<System.Collections.DictionaryEntry>
+        |> Seq.map (fun d -> d.Key :?> string, d.Value :?> string)
+        |> Map.ofSeq
 
     envVars.Item(x)
