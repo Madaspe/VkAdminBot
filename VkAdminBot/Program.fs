@@ -27,6 +27,15 @@ let random = new Random()
 
 let notNull value = not (obj.ReferenceEquals(value, null))
 
+let sendMessage text peerId =
+    let messageParams = new RequestParams.MessagesSendParams (
+        Message=text,
+        PeerId=peerId,
+        RandomId=(int64 <| random.Next 999999)
+    )
+        
+    vkApi.Messages.Send(messageParams) |> ignore
+
 let messageText (update: GroupUpdate): string option =
     if notNull update.MessageNew then
         let text = update.MessageNew.Message.Text
@@ -37,22 +46,10 @@ let messageText (update: GroupUpdate): string option =
     else None
 
 let pingCommand (update: GroupUpdate) =
-    let messageParams = new RequestParams.MessagesSendParams (
-        Message="Pong",
-        PeerId=update.MessageNew.Message.PeerId,
-        RandomId=(int64 <| random.Next 999999)
-    )
-        
-    vkApi.Messages.Send(messageParams) |> ignore
+    sendMessage "Pong" update.MessageNew.Message.PeerId
 
 let echoCommand (update: GroupUpdate) =
-    let messageParams = new RequestParams.MessagesSendParams (
-        Message=update.MessageNew.Message.Text,
-        PeerId=update.MessageNew.Message.PeerId,
-        RandomId=(int64 <| random.Next 999999)
-    )
-        
-    vkApi.Messages.Send(messageParams) |> ignore
+     sendMessage (messageText update).Value update.MessageNew.Message.PeerId
 
 let commandDispatch (update: GroupUpdate) =
     let text = (messageText update).Value
@@ -71,6 +68,7 @@ let updateDispatch (update) =
     match text with
     | Some(text) -> commandDispatch update
     | None -> ()
+
 
 let readChannel (channelReader: ChannelReader<_>) =
     channelReader.ReadAllAsync()
