@@ -1,6 +1,8 @@
 ﻿namespace VkAdminBot
 
-open VkAdminBot.Methods
+open VkAdminBot.Methods.Utils
+open VkAdminBot.Methods.VkApiMethods
+
 open System.Threading
 open System.Threading.Channels
 open VkNet.Extensions.Polling.Models.Configuration

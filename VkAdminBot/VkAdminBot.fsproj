@@ -4,7 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Methods.fs" />
+<Compile Include="Methods\Utils.fs" />
+    <Compile Include="Methods\VkApiMethods.fs" />
     <Compile Include="Commands\PingCommand.fs" />
     <Compile Include="Commands\KickCommand.fs" />
     <Compile Include="Program.fs" />
@@ -26,5 +27,8 @@
     <PackageReference Include="FSharp.Control.AsyncSeq" Version="3.2.0">
       <GeneratePathProperty></GeneratePathProperty>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Methods\" />
   </ItemGroup>
 </Project>

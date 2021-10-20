@@ -1,5 +1,6 @@
-module VkAdminBot.Methods
+﻿module VkAdminBot.Methods.VkApiMethods
 
+open VkAdminBot.Methods.Utils
 open System.Threading
 open System.Threading.Channels
 open VkNet.Extensions.Polling.Models.Configuration
@@ -11,6 +12,7 @@ open FSharp.Control
 open System
 
 let random = new Random()
+
 let sendMessage (text: string) peerId (vkApi: VkApi) =
     let messageParams = new RequestParams.MessagesSendParams (
         Message=text,
@@ -19,8 +21,7 @@ let sendMessage (text: string) peerId (vkApi: VkApi) =
     )
             
     vkApi.Messages.Send(messageParams) |> ignore
-        
-let notNull value = not (obj.ReferenceEquals(value, null))
+       
 
 let messageText (update: GroupUpdate): string option =
     if notNull update.MessageNew then
@@ -30,12 +31,3 @@ let messageText (update: GroupUpdate): string option =
             Some text
         else None
     else None
-
-let getEnvVar x =
-    let envVars = 
-        System.Environment.GetEnvironmentVariables()
-        |> Seq.cast<System.Collections.DictionaryEntry>
-        |> Seq.map (fun d -> d.Key :?> string, d.Value :?> string)
-        |> Map.ofSeq
-
-    envVars.Item(x)

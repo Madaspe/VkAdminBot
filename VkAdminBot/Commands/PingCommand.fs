@@ -1,6 +1,6 @@
 module VkAdminBot.Commands.Ping
 
-open VkAdminBot.Methods
+open VkAdminBot.Methods.VkApiMethods
 open VkNet
 open VkNet.Model.GroupUpdate
 

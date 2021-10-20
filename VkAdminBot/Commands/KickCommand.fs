@@ -1,6 +1,6 @@
 ﻿module VkAdminBot.Commands.Kick
 
-open VkAdminBot.Methods
+open VkAdminBot.Methods.VkApiMethods
 open VkNet
 open VkNet.Model.GroupUpdate
 
